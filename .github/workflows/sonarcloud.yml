@@ -1,10 +1,10 @@
-        - name: SonarScanner Begin
+      - name: SonarScanner Begin
         run: |
           dotnet tool install --global dotnet-sonarscanner
           echo "$env:USERPROFILE\.dotnet\tools" >> $env:GITHUB_PATH
           dotnet sonarscanner begin `
-          /k:"SviatoslavOpaliuk_-" `
-          /o:"sviatoslavopaliuk" `
+          /k:"ТУТ_ВСТАВ_PROJECT_KEY" `
+          /o:"ТУТ_ВСТАВ_ORGANIZATION_KEY" `
           /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
           /d:sonar.host.url="https://sonarcloud.io" `
           /d:sonar.cs.opencover.reportsPaths="**/coverage.xml" `
