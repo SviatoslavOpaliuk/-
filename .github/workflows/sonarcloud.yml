@@ -2,9 +2,9 @@ name: SonarCloud analysis
 
 on:
   push:
-    branches: [ "master" ] # Якщо твоя головна гілка називається main, зміни тут master на main
+    branches: [ "master", "main" ] # Додав main на випадок, якщо гілка називається так
   pull_request:
-    branches: [ "master" ] # І тут теж
+    branches: [ "master", "main" ]
   workflow_dispatch:
 
 permissions:
@@ -22,34 +22,30 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      # 1) BEGIN: SonarScanner for .NET
+      # 1) BEGIN: SonarScanner for .NET (Оновлено під версію 11.0)
       - name: SonarScanner Begin
         run: |
           dotnet tool install --global dotnet-sonarscanner
           echo "$env:USERPROFILE\.dotnet\tools" >> $env:GITHUB_PATH
           dotnet sonarscanner begin `
-          /d:sonar.projectKey="SviatoslavOpaliuk_-" `
-          /d:sonar.organization="sviatoslavopaliuk" `
+          /k:"SviatoslavOpaliuk_-" `
+          /o:"sviatoslavopaliuk" `
           /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
+          /d:sonar.host.url="https://sonarcloud.io" `
           /d:sonar.cs.opencover.reportsPaths="**/coverage.xml" `
-          /d:sonar.cpd.cs.minimumTokens=40 `
-          /d:sonar.cpd.cs.minimumLines=5 `
           /d:sonar.exclusions=**/bin/**,**/obj/**,**/sonarcloud.yml `
           /d:sonar.qualitygate.wait=true
         shell: pwsh
       
-      # 2) BUILD & TEST
+      # 2) BUILD
       - name: Restore
-        # ЗАМІНИ NetSdrClient.sln НА НАЗВУ ТВОГО ФАЙЛУ РІШЕННЯ, ЯКЩО ВОНА ІНША
-        run: dotnet restore NetSdrClient.sln 
+        # 👇👇👇 ЗАМІНИ НИЖЧЕ "ТВОЯ_НАЗВА.sln" НА СВОЮ РЕАЛЬНУ НАЗВУ ФАЙЛУ 👇👇👇
+        run: dotnet restore NetSdrClient.sln
       
       - name: Build
-        # ЗАМІНИ NetSdrClient.sln НА НАЗВУ ТВОГО ФАЙЛУ РІШЕННЯ, ЯКЩО ВОНА ІНША
+        # 👇👇👇 ТУТ ТЕЖ ЗАМІНИ НА СВОЮ НАЗВУ 👇👇👇
         run: dotnet build NetSdrClient.sln -c Release --no-restore
       
-      # Блок тестів закоментований у завданні, тому поки пропускаємо його,
-      # але якщо є тести - розкоментуй і налаштуй шляхи.
-
       # 3) END: SonarScanner
       - name: SonarScanner End
         run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
