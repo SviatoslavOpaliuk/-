@@ -1,4 +1,4 @@
-      - name: SonarScanner Begin
+        - name: SonarScanner Begin
         run: |
           dotnet tool install --global dotnet-sonarscanner
           echo "$env:USERPROFILE\.dotnet\tools" >> $env:GITHUB_PATH
