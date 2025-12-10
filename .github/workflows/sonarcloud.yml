@@ -1,8 +1,8 @@
-SonarCloud analysis
+name: SonarCloud analysis
 
 on:
   push:
-    branches: [ "master", "main" ] # Додав main на випадок, якщо гілка називається так
+    branches: [ "master", "main" ]
   pull_request:
     branches: [ "master", "main" ]
   workflow_dispatch:
@@ -27,8 +27,8 @@ jobs:
           dotnet tool install --global dotnet-sonarscanner
           echo "$env:USERPROFILE\.dotnet\tools" >> $env:GITHUB_PATH
           dotnet sonarscanner begin `
-          /d:sonar.projectKey="SviatoslavOpaliuk_-" `
-          /d:sonar.organization="sviatoslavopaliuk" `
+          /d:sonar.projectKey="ТУТ_ВСТАВ_PROJECT_KEY" `
+          /d:sonar.organization="ТУТ_ВСТАВ_ORGANIZATION_KEY" `
           /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
           /d:sonar.cs.opencover.reportsPaths="**/coverage.xml" `
           /d:sonar.cpd.cs.minimumTokens=40 `
@@ -38,13 +38,11 @@ jobs:
         shell: pwsh
       
       - name: Restore
-        # 👇 ПЕРЕВІР НАЗВУ ФАЙЛУ .sln НИЖЧЕ
         run: dotnet restore NetSdrClient.sln
         
       - name: Build
-        # 👇 ПЕРЕВІР НАЗВУ ФАЙЛУ .sln НИЖЧЕ
         run: dotnet build NetSdrClient.sln -c Release --no-restore
 
       - name: SonarScanner End
         run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-        shell: pws
+        shell: pwsh
